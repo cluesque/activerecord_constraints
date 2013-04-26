@@ -239,7 +239,11 @@ module ActiveRecord
           else
             columns = self.class.constraint_to_columns(constraint)
             ActiveRecord::Base.logger.debug("columns are: #{columns.inspect}")
-            columns.each { |name| errors.add(name, message) }
+            if columns.present?
+              columns.each { |name| errors.add(name, message) }
+            else
+              errors.add(:base, "Violation of #{constraint}: #{message}")
+            end
           end
         end
       end
