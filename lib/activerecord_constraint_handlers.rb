@@ -135,21 +135,21 @@ module ActiveRecord
           # the model as the base.
           def create_subclasses
             ActiveRecord::Base.logger.debug("create_subclasses")
-            self.class_eval <<-EOF
+            self.class_eval <<-EOF, __FILE__, __LINE__
               class PgClass < #{self}
-                set_table_name "pg_class"
-                set_primary_key "oid"
+                self.table_name = "pg_class"
+                self.primary_key = "oid"
               end
 
               class PgAttribute < #{self}
-                set_table_name "pg_attribute"
-                set_primary_key "oid"
+                self.table_name = "pg_attribute"
+                self.primary_key = "oid"
                 belongs_to :attrel, :class_name => "PgClass", :foreign_key => :attrelid
               end
 
               class PgConstraint < #{self}
-                set_table_name "pg_constraint"
-                set_primary_key "oid"
+                self.table_name = "pg_constraint"
+                self.primary_key = "oid"
                 belongs_to :conrel, :class_name => "PgClass", :foreign_key => :conrelid
               end
             EOF
