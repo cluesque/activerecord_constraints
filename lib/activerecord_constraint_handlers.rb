@@ -174,9 +174,14 @@ module ActiveRecord
           def constraint_to_columns(constraint)
             ActiveRecord::Base.logger.debug("constraint_to_columns: '#{constraint}' (#{constraint.class})")
 
+            if pg_constraint_hash.nil?
+              ActiveRecord::Base.logger.warn("constraint_to_columns: pg_constraint_hash not found")
+              return
+            end
+
             # Should never hit this now... added during debugging.
             unless pg_constraint_hash.has_key?(constraint)
-              ActiveRecord::Base.logger.debug("constraint_to_columns: constraint not found")
+              ActiveRecord::Base.logger.warn("constraint_to_columns: constraint not found")
               return
             end
             # pg_constraint_hash is a hash from the contraint name to
